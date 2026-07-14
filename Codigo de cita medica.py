@@ -128,6 +128,47 @@ class Medico(Persona):
     def consultar_agenda(self):
         print("Consultando agenda del médico...")
 
+# Representa una cita médica.
+class Cita:
+
+    # Constructor.
+    def __init__(self, id_cita, fecha, hora, estado):
+
+        # Guarda el ID.
+        self.__id_cita = id_cita # Guarda el ID de la cita como un atributo privado
+
+        # Guarda la fecha.
+        self.__fecha = fecha # Guarda la fecha de la cita como un atributo privado
+
+        # Guarda la hora.
+        self.__hora = hora # Guarda la hora de la cita como un atributo privado
+
+        # Guarda el estado.
+        self.__estado = estado # Guarda el estado de la cita como un atributo privado
+
+    # Métodos Get.
+
+    def get_fecha(self):
+        return self.__fecha # Devuelve la fecha de la cita
+
+    def get_hora(self):
+        return self.__hora # Devuelve la hora de la cita
+
+    def get_estado(self):
+        return self.__estado # Devuelve el estado de la cita
+
+    # Agenda una cita.
+    def agendar(self): 
+        print("Cita agendada correctamente.")
+
+    # Cancela una cita.
+    def cancelar(self):
+        print("Cita cancelada.")
+
+    # Reprograma una cita.
+    def reprogramar(self):
+        print("Cita reprogramada.")
+
 # ===========================================
 # ESTRUCTURA DE DATOS
 # ===========================================
