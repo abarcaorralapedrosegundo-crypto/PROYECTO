@@ -43,6 +43,50 @@ class Paciente:
         print("Edad:", self.__edad)
         print("Teléfono:", self.__telefono)
 
+# La clase Medico hereda de Persona.
+class Medico(Persona):
+
+    # Constructor.
+    def _init_(self, id_medico, nombre, cedula,
+                 especialidad, telefono, consultorio):
+
+        # Llama al constructor de Persona.
+        super()._init_(nombre, cedula)
+
+        # Guarda el ID.
+        self.__id_medico = id_medico
+
+        # Guarda la especialidad.
+        self.__especialidad = especialidad
+
+        # Guarda el teléfono.
+        self.__telefono = telefono
+
+        # Guarda el consultorio.
+        self.__consultorio = consultorio
+
+    # Métodos Get.
+
+    def get_id(self):
+        return self.__id_medico
+
+    def get_especialidad(self):
+        return self.__especialidad
+
+    def get_telefono(self):
+        return self.__telefono
+
+    def get_consultorio(self):
+        return self.__consultorio
+
+    # Método registrar.
+    def registrar(self):
+        print("Médico registrado correctamente.")
+
+    # Método consultar agenda.
+    def consultar_agenda(self):
+        print("Consultando agenda del médico...")
+
 # ===========================================
 # ESTRUCTURA DE DATOS
 # ===========================================
