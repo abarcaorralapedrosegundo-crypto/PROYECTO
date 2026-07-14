@@ -169,6 +169,33 @@ class Cita:
     def reprogramar(self):
         print("Cita reprogramada.")
 
+# Representa el historial de un paciente.
+class HistorialClinico:
+
+    # Constructor.
+    def __init__(self, id_historial, fecha,
+                 diagnostico, tratamiento): #Constructor de la clase.Se ejecuta automáticamente al crear un objeto.
+
+        # Guarda el ID.
+        self.__id_historial = id_historial # Guarda el ID del historial clínico como un atributo privado
+
+        # Guarda la fecha.
+        self.__fecha = fecha # Guarda la fecha del historial clínico como un atributo privado
+
+        # Guarda el diagnóstico.
+        self.__diagnostico = diagnostico # Guarda el diagnóstico del historial clínico como un atributo privado
+
+        # Guarda el tratamiento.
+        self.__tratamiento = tratamiento # Guarda el tratamiento del historial clínico como un atributo privado
+
+    # Agrega un registro.
+    def agregar_registro(self):
+        print("Registro agregado.")
+
+    # Consulta el historial.
+    def consultar(self):
+        print("Mostrando historial...")
+
 # ===========================================
 # ESTRUCTURA DE DATOS
 # ===========================================
