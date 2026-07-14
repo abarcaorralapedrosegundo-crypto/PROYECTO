@@ -219,6 +219,26 @@ def atender_paciente():
         print("Atendiendo a:", paciente)
     else:
         print("No existen pacientes en espera")
+
+# Crea una pila vacía.
+pila_historial = [] # Representa la pila de historiales clínicos
+
+# Agrega una atención.
+def agregar_atencion(registro): # Agrega un registro de atención médica a la pila de historiales clínicos
+
+    # Inserta el registro.
+    pila_historial.append(registro) # Agrega un nuevo registro al final de la pila
+
+# Consulta la última atención.
+def ultima_atencion():
+
+    # Verifica que existan registros.
+    if pila_historial:
+
+        # Devuelve el último.
+        return pila_historial[-1] # Devuelve el último elemento de la pila sin eliminarlo
+
+    return None
 # ===========================================
 # BASE DE DATOS
 # ===========================================
