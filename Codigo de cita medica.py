@@ -239,6 +239,47 @@ def ultima_atencion():
         return pila_historial[-1] # Devuelve el último elemento de la pila sin eliminarlo
 
     return None
+# Representa un nodo de la lista.
+class Nodo:
+    def __init__(self, dato):  # Constructor
+        self.dato = dato  # Guarda el dato
+        self.siguiente = None  # Nodo siguiente
+        self.anterior = None  # Nodo anterior
+
+# Representa la agenda de citas.
+class ListaDoblementeEnlazada:
+    def __init__(self):  # Constructor
+        self.inicio = None  # Inicio de la lista
+    # Inserta una cita
+    def insertar(self, dato):
+        nuevo = Nodo(dato)  # Crea un nuevo nodo
+        # Si la lista está vacía
+        if self.inicio is None:
+            self.inicio = nuevo  # El nuevo nodo será el primero
+
+            return
+
+        # Recorre la lista.
+        actual = self.inicio
+
+        while actual.siguiente:
+
+            actual = actual.siguiente
+
+        actual.siguiente = nuevo  # Conecta el nuevo nodo
+
+        nuevo.anterior = actual
+
+    # Muestra todas las citas
+    def mostrar(self):
+
+        actual = self.inicio
+
+        while actual:
+
+            print(actual.dato)
+
+            actual = actual.siguiente
 # ===========================================
 # BASE DE DATOS
 # ===========================================
