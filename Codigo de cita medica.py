@@ -199,17 +199,26 @@ class HistorialClinico:
 # ===========================================
 # ESTRUCTURA DE DATOS
 # ===========================================
-
-# Se crea una cola vacía para almacenar los pacientes en espera
+# Crea una cola vacía
 cola_espera = deque()
 
-cola_espera.append("Pedro Vera")  # Agrega un paciente al final de la cola
-cola_espera.append("María López")  #Agrega otro paciente al final de la cola
-cola_espera.append("Carlos Pizarro")  # Agrega un tercer paciente al final de la cola
+# Función para ingresar un paciente
+def ingresar_cola(nombre):
 
-# Extrae y muestra el primer paciente de la cola
-print("Siguiente paciente:", cola_espera.popleft())
+    # Agrega el paciente al final
+    cola_espera.append(nombre)
 
+    print(nombre, "ingresó a la sala de espera")
+
+# Función para atender.
+def atender_paciente():
+
+    # Verifica que existan pacientes
+    if cola_espera:
+        paciente = cola_espera.popleft()  # Extrae el primero
+        print("Atendiendo a:", paciente)
+    else:
+        print("No existen pacientes en espera")
 # ===========================================
 # BASE DE DATOS
 # ===========================================
