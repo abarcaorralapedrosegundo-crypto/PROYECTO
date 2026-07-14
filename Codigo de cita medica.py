@@ -3,6 +3,7 @@ Integrantes: Abarca Orrala Pedro Segundo, Delacruz Castillo Henry Alexander,
 Lopez Mendoza Genessis Milena, Piedra Ortega Francisco Andres, 
 Quinde Eugenio Julexi Tatiana'''
 # Librerías
+import os
 import sqlite3  # Importa la librería sqlite3 para trabajar con bases de datos SQLite
 from collections import deque  # Importa la estructura deque,que se utilizará como una cola (FIFO)
 from tkinter import *  # Importa todos los componentes de Tkinter para crear la interfaz gráfica
@@ -11,37 +12,77 @@ from tkinter import *  # Importa todos los componentes de Tkinter para crear la 
 # CLASE DEL DOMINIO
 # ===========================================
 
-# Se crea la clase Paciente para representar a cada paciente del sistema
-class Paciente:
+# Se crea la clase Persona para representar la información
+# común que tendrán pacientes y médicos.
+class Persona:
 
-    def __init__(self, nombre, cedula, edad, telefono):  #Constructor de la clase.Se ejecuta automáticamente al crear un objeto
-        self.__nombre = nombre  # Guarda el nombre del paciente como un atributo privado
-        self.__cedula = cedula  # Guarda la cédula del paciente como un atributo privado
-        self.__edad = edad  # Guarda la edad del paciente como un atributo privado
-        self.__telefono = telefono  # Guarda el telefono del paciente como un atributo privado
+    # Constructor de la clase Persona.
+    # Se ejecuta automáticamente cuando se crea un objeto.
+    def __init__(self, nombre, cedula):
+        self.__nombre = nombre  # Guarda el nombre como un atributo privado
+        self.__cedula = cedula  # Guarda la cédula como un atributo privado.
 
-    # Método que devuelve el nombre del paciente
     def get_nombre(self):
-        return self.__nombre
-
-    # Método que devuelve la cédula del paciente
-    def get_cedula(self):
-        return self.__cedula
-
-    # Método que devuelve la edad del paciente
-    def get_edad(self):
-        return self.__edad
+        return self.__nombre  # Devuelve el nombre
     
-    # Método que devuelve el teléfono del paciente
-    def get_telefono(self):
-        return self.__telefono
+    def get_cedula(self):
+        return self.__cedula  # Devuelve la cédula
 
-    # Método que muestra los datos del paciente en la consola
+    # Permite modificar el nombre
+    def set_nombre(self, nombre):
+        self.__nombre = nombre
+
+    # Permite modificar la cédula
+    def set_cedula(self, cedula):
+        self.__cedula = cedula
+
+    # Muestra los datos de la persona
     def mostrar_datos(self):
         print("Nombre:", self.__nombre)
         print("Cédula:", self.__cedula)
-        print("Edad:", self.__edad)
-        print("Teléfono:", self.__telefono)
+        
+# La clase Paciente hereda los atributos y métodos
+# de la clase Persona.
+class Paciente(Persona):
+
+    # Constructor de la clase Paciente.
+    def __init__(self, id_paciente, nombre, cedula, edad, telefono):
+        super().__init__(nombre, cedula)   # Llama al constructor de la clase Persona
+        self.__id_paciente = id_paciente  # Guarda el identificador del paciente
+        self.__edad = edad  # Guarda la edad
+        self.__telefono = telefono  # Guarda el teléfono
+
+    # Devuelve el ID
+    def get_id(self):
+        return self.__id_paciente
+
+    # Devuelve la edad
+    def get_edad(self):
+        return self.__edad
+
+    # Devuelve el teléfono
+    def get_telefono(self):
+        return self.__telefono
+
+    # Permite modificar la edad
+    def set_edad(self, edad):
+        self.__edad = edad
+
+    # Permite modificar el teléfono
+    def set_telefono(self, telefono):
+        self.__telefono = telefono
+
+    # Método para registrar un paciente
+    def registrar(self):
+        print("Paciente registrado correctamente.")
+
+    # Método para actualizar un paciente
+    def actualizar(self):
+        print("Paciente actualizado correctamente.")
+
+    # Método para consultar el historial
+    def consultar_historial(self):
+        print("Consultando historial clínico...")
 
 # La clase Medico hereda de Persona.
 class Medico(Persona):
