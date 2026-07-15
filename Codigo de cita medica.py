@@ -3,10 +3,21 @@ Integrantes: Abarca Orrala Pedro Segundo, Delacruz Castillo Henry Alexander,
 Lopez Mendoza Genessis Milena, Piedra Ortega Francisco Andres, 
 Quinde Eugenio Julexi Tatiana'''
 # Librerías
-import os
+import os  # Permite trabajar con carpetas y rutas del sistema operativo
 import sqlite3  # Importa la librería sqlite3 para trabajar con bases de datos SQLite
 from collections import deque  # Importa la estructura deque,que se utilizará como una cola (FIFO)
 from tkinter import *  # Importa todos los componentes de Tkinter para crear la interfaz gráfica
+from tkinter import messagebox  # Importa cuadros de diálogo para mostrar mensajes al usuario
+from tkinter import ttk  # Permite mostrar información en forma de tabla dentro de la interfaz
+
+# ==========================================================
+# VARIABLES GLOBALES
+# ==========================================================
+cola_espera = deque()  # Cola utilizada para administrar la sala de espera
+
+pila_historial = []  # Pila utilizada para almacenar los historiales recientes
+
+lista_citas = ListaDoblementeEnlazada()  # Crea la lista doblemente enlazada que administrará las citas
 
 # ===========================================
 # CLASE DEL DOMINIO
@@ -15,7 +26,6 @@ from tkinter import *  # Importa todos los componentes de Tkinter para crear la 
 # Se crea la clase Persona para representar la información
 # común que tendrán pacientes y médicos.
 class Persona:
-
     # Constructor de la clase Persona.
     # Se ejecuta automáticamente cuando se crea un objeto.
     def __init__(self, nombre, cedula):
@@ -71,24 +81,24 @@ class Paciente(Persona):
     # Permite modificar el teléfono
     def set_telefono(self, telefono):
         self.__telefono = telefono
+    # Muestra toda la información del paciente
+    def mostrar_datos(self):
 
-    # Método para registrar un paciente
-    def registrar(self):
-        print("Paciente registrado correctamente.")
+        print("ID:", self.__id_paciente)
 
-    # Método para actualizar un paciente
-    def actualizar(self):
-        print("Paciente actualizado correctamente.")
+        print("Nombre:", self.get_nombre())
 
-    # Método para consultar el historial
-    def consultar_historial(self):
-        print("Consultando historial clínico...")
+        print("Cédula:", self.get_cedula())
+
+        print("Edad:", self.__edad)
+
+        print("Teléfono:", self.__telefono)
 
 # La clase Medico hereda de Persona.
 class Medico(Persona):
 
     # Constructor.
-    def _init_(self, id_medico, nombre, cedula,
+    def __init__(self, id_medico, nombre, cedula,
                  especialidad, telefono, consultorio):
 
         # Llama al constructor de Persona.
@@ -106,8 +116,7 @@ class Medico(Persona):
         # Guarda el consultorio.
         self.__consultorio = consultorio
 
-    # Métodos Get.
-
+    # Métodos Get y Devuelve el ID
     def get_id(self):
         return self.__id_medico
 
@@ -120,33 +129,57 @@ class Medico(Persona):
     def get_consultorio(self):
         return self.__consultorio
 
-    # Método registrar.
-    def registrar(self):
-        print("Médico registrado correctamente.")
+    # Permite modificar la especialidad
+    def set_especialidad(self, especialidad):
+        self.__especialidad = especialidad
 
-    # Método consultar agenda.
-    def consultar_agenda(self):
-        print("Consultando agenda del médico...")
+    # Permite modificar el teléfono
+    def set_telefono(self, telefono):
+        self.__telefono = telefono
+
+    # Permite modificar el consultorio
+    def set_consultorio(self, consultorio):
+        self.__consultorio = consultorio
+
+    # Muestra la información del médico
+    def mostrar_datos(self):
+
+        print("ID:", self.__id_medico)
+
+        print("Nombre:", self.get_nombre())
+
+        print("Cédula:", self.get_cedula())
+
+        print("Especialidad:", self.__especialidad)
+
+        print("Teléfono:", self.__telefono)
+
+        print("Consultorio:", self.__consultorio)
 
 # Representa una cita médica.
 class Cita:
 
     # Constructor.
-    def __init__(self, id_cita, fecha, hora, estado):
+    def __init__(self, id_cita, fecha, hora, estado,id_paciente,id_medico):
 
-        # Guarda el ID.
+        # Guarda el ID
         self.__id_cita = id_cita # Guarda el ID de la cita como un atributo privado
 
-        # Guarda la fecha.
+        # Guarda la fecha
         self.__fecha = fecha # Guarda la fecha de la cita como un atributo privado
 
-        # Guarda la hora.
+        # Guarda la hora
         self.__hora = hora # Guarda la hora de la cita como un atributo privado
 
-        # Guarda el estado.
+        # Guarda el estado
         self.__estado = estado # Guarda el estado de la cita como un atributo privado
 
-    # Métodos Get.
+        # Guarda el paciente asociado
+        self.__id_paciente = id_paciente
+
+        # Guarda el médico asociado
+        self.__id_medico = id_medico
+    # Métodos Get
 
     def get_fecha(self):
         return self.__fecha # Devuelve la fecha de la cita
@@ -157,44 +190,48 @@ class Cita:
     def get_estado(self):
         return self.__estado # Devuelve el estado de la cita
 
-    # Agenda una cita.
-    def agendar(self): 
-        print("Cita agendada correctamente.")
+    def get_id_paciente(self):
+        return self.__id_paciente
 
-    # Cancela una cita.
-    def cancelar(self):
-        print("Cita cancelada.")
-
-    # Reprograma una cita.
-    def reprogramar(self):
-        print("Cita reprogramada.")
-
+    def get_id_medico(self):
+        return self.__id_medico
 # Representa el historial de un paciente.
 class HistorialClinico:
 
-    # Constructor.
+    # Constructor
     def __init__(self, id_historial, fecha,
-                 diagnostico, tratamiento): #Constructor de la clase.Se ejecuta automáticamente al crear un objeto.
+                 diagnostico, tratamiento,id_paciente): #Constructor de la clase.Se ejecuta automáticamente al crear un objeto.
 
-        # Guarda el ID.
+        # Guarda el ID
         self.__id_historial = id_historial # Guarda el ID del historial clínico como un atributo privado
 
-        # Guarda la fecha.
+        # Guarda la fecha
         self.__fecha = fecha # Guarda la fecha del historial clínico como un atributo privado
 
-        # Guarda el diagnóstico.
+        # Guarda el diagnóstico
         self.__diagnostico = diagnostico # Guarda el diagnóstico del historial clínico como un atributo privado
 
-        # Guarda el tratamiento.
+        # Guarda el tratamiento
         self.__tratamiento = tratamiento # Guarda el tratamiento del historial clínico como un atributo privado
 
-    # Agrega un registro.
-    def agregar_registro(self):
-        print("Registro agregado.")
+        # Guarda el paciente asociado.
+        self.__id_paciente = id_paciente
+                     
+    # Devuelve la fecha
+    def get_fecha(self):
+        return self.__fecha
 
-    # Consulta el historial.
-    def consultar(self):
-        print("Mostrando historial...")
+    # Devuelve el diagnóstico
+    def get_diagnostico(self):
+        return self.__diagnostico
+
+    # Devuelve el tratamiento
+    def get_tratamiento(self):
+        return self.__tratamiento
+
+    # Devuelve el ID del paciente
+    def get_id_paciente(self):
+        return self.__id_paciente
 
 # ===========================================
 # ESTRUCTURA DE DATOS
@@ -208,78 +245,99 @@ def ingresar_cola(nombre):
     # Agrega el paciente al final
     cola_espera.append(nombre)
 
-    print(nombre, "ingresó a la sala de espera")
-
-# Función para atender.
+# Función para atender
 def atender_paciente():
+    # Verifica si existen pacientes
+    if len(cola_espera) > 0:
 
-    # Verifica que existan pacientes
-    if cola_espera:
-        paciente = cola_espera.popleft()  # Extrae el primero
-        print("Atendiendo a:", paciente)
-    else:
-        print("No existen pacientes en espera")
+        # Elimina y devuelve el primer paciente
+        return cola_espera.popleft()
 
-# Crea una pila vacía.
-pila_historial = [] # Representa la pila de historiales clínicos
+    # Si no existen pacientes devuelve None
+    return None
+# Devuelve todos los pacientes que se encuentran esperando
+def mostrar_cola():
 
-# Agrega una atención.
-def agregar_atencion(registro): # Agrega un registro de atención médica a la pila de historiales clínicos
+    # Convierte la cola en una lista
+    return list(cola_espera)
 
-    # Inserta el registro.
-    pila_historial.append(registro) # Agrega un nuevo registro al final de la pila
+# Inserta una nueva atención en la parte superior de la pila
+def agregar_historial(registro):
 
-# Consulta la última atención.
+    # Agrega el nuevo registro
+    pila_historial.append(registro)
+
+# Consulta la última atención
 def ultima_atencion():
 
-    # Verifica que existan registros.
-    if pila_historial:
+    # Comprueba que existan registros
+    if len(pila_historial) > 0:
 
-        # Devuelve el último.
-        return pila_historial[-1] # Devuelve el último elemento de la pila sin eliminarlo
+        # Devuelve el último elemento
+        return pila_historial[-1]
 
     return None
-# Representa un nodo de la lista.
+
+# Elimina el historial más reciente
+def eliminar_ultima_atencion():
+
+    # Comprueba que existan elementos
+    if len(pila_historial) > 0:
+
+        # Elimina el último historial
+        pila_historial.pop()
+
+# Representa un nodo de la lista
 class Nodo:
     def __init__(self, dato):  # Constructor
         self.dato = dato  # Guarda el dato
         self.siguiente = None  # Nodo siguiente
         self.anterior = None  # Nodo anterior
 
-# Representa la agenda de citas.
+# Representa la agenda de citas
 class ListaDoblementeEnlazada:
     def __init__(self):  # Constructor
         self.inicio = None  # Inicio de la lista
+        self.fin = None  # Último nodo
     # Inserta una cita
     def insertar(self, dato):
         nuevo = Nodo(dato)  # Crea un nuevo nodo
         # Si la lista está vacía
         if self.inicio is None:
             self.inicio = nuevo  # El nuevo nodo será el primero
+            # También será el último
+            self.fin = nuevo
+        else:
 
-            return
+            # Conecta el nuevo nodo con el último
+            self.fin.siguiente = nuevo
 
-        # Recorre la lista.
+            # Guarda la referencia al nodo anterior
+            nuevo.anterior = self.fin
+
+            # Actualiza el último nodo
+            self.fin = nuevo
+
+    # Devuelve todas las citas almacenadas
+    def recorrer(self):
+
+        # Lista temporal
+        datos = []
+
+        # Empieza desde el inicio
         actual = self.inicio
 
-        while actual.siguiente:
+        # Recorre toda la lista
+        while actual is not None:
 
+            # Guarda el dato del nodo
+            datos.append(actual.dato)
+
+            # Avanza al siguiente nodo
             actual = actual.siguiente
 
-        actual.siguiente = nuevo  # Conecta el nuevo nodo
-
-        nuevo.anterior = actual
-
-    # Muestra todas las citas
-    def mostrar(self):
-
-        actual = self.inicio
-
-        while actual:
-
-            print(actual.dato)
-
-            actual = actual.siguiente
+        # Devuelve todas las citas
+        return datos   
 # ===========================================
 # BASE DE DATOS
 # ===========================================
