@@ -467,6 +467,44 @@ crear_tablas()
 # INTERFAZ GRÁFICA
 # ===========================================
 
+# REGISTRAR PACIENTE
+# ----------------------------------------------------------
+
+# Esta función recibe un objeto Paciente y lo almacena
+# en la base de datos.
+def registrar_paciente(paciente):
+
+    # Se establece la conexión con SQLite.
+    conexion = conectar_bd()
+
+    # Se crea el cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la sentencia INSERT.
+    cursor.execute("""
+
+        INSERT INTO pacientes
+        (nombre, cedula, edad, telefono)
+
+        VALUES (?, ?, ?, ?)
+
+    """, (
+
+        paciente.get_nombre(),
+
+        paciente.get_cedula(),
+
+        paciente.get_edad(),
+
+        paciente.get_telefono()
+
+    ))
+
+    # Guarda los cambios realizados.
+    conexion.commit()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
 # Crea la ventana principal del programa
 ventana = Tk()
 
