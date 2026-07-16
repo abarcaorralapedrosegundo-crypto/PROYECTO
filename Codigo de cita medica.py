@@ -195,6 +195,9 @@ class Cita:
 
     def get_id_medico(self):
         return self.__id_medico
+        
+    def get_id(self):
+    return self.__id_cita
 # Representa el historial de un paciente.
 class HistorialClinico:
 
@@ -505,6 +508,877 @@ def registrar_paciente(paciente):
 
     # Cierra la conexión con la base de datos.
     conexion.close()
+
+# CONSULTAR PACIENTES
+# ----------------------------------------------------------
+
+# Devuelve todos los pacientes registrados.
+def consultar_paciente():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta SQL.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM paciente
+
+        ORDER BY nombre
+
+    """)
+
+    # Guarda todos los registros obtenidos.
+    pacientes = cursor.fetchall()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la lista de pacientes.
+    return pacientes
+
+# BUSCAR PACIENTE
+# ----------------------------------------------------------
+
+# Busca un paciente utilizando su número de cédula.
+def buscar_paciente(cedula):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM paciente
+
+        WHERE cedula = ?
+
+    """, (cedula,))
+
+    # Obtiene solamente un registro.
+    paciente = cursor.fetchone()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve el resultado.
+    return paciente
+
+# ACTUALIZAR PACIENTE
+# ----------------------------------------------------------
+
+# Actualiza la información de un paciente existente.
+def actualizar_paciente(paciente):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la actualización.
+    cursor.execute("""
+
+        UPDATE paciente
+
+        SET
+
+        nombre = ?,
+
+        edad = ?,
+
+        telefono = ?
+
+        WHERE cedula = ?
+
+    """, (
+
+        paciente.get_nombre(),
+
+        paciente.get_edad(),
+
+        paciente.get_telefono(),
+
+        paciente.get_cedula()
+
+    ))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# ELIMINAR PACIENTE
+# ----------------------------------------------------------
+
+# Elimina un paciente utilizando su cédula.
+def eliminar_paciente(cedula):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la eliminación.
+    cursor.execute("""
+
+        DELETE
+
+        FROM paciente
+
+        WHERE cedula = ?
+
+    """, (cedula,))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# CONTAR PACIENTES
+# ----------------------------------------------------------
+
+# Devuelve la cantidad total de pacientes registrados.
+def contar_paciente():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Cuenta todos los pacientes.
+    cursor.execute("""
+
+        SELECT COUNT(*)
+
+        FROM paciente
+
+    """)
+
+    # Obtiene el resultado.
+    cantidad = cursor.fetchone()[0]
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la cantidad encontrada.
+    return cantidad
+
+# REGISTRAR MÉDICO
+# ----------------------------------------------------------
+
+# Esta función recibe un objeto Medico y guarda su
+# información dentro de la base de datos.
+def registrar_medico(medico):
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea el cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la sentencia INSERT.
+    cursor.execute("""
+
+        INSERT INTO medico
+        (nombre, cedula, especialidad, telefono, consultorio)
+
+        VALUES (?, ?, ?, ?, ?)
+
+    """, (
+
+        medico.get_nombre(),
+
+        medico.get_cedula(),
+
+        medico.get_especialidad(),
+
+        medico.get_telefono(),
+
+        medico.get_consultorio()
+
+    ))
+
+    # Guarda los cambios realizados.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# CONSULTAR MÉDICOS
+# ----------------------------------------------------------
+
+# Devuelve todos los médicos registrados.
+def consultar_medico():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta SQL.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM medico
+
+        ORDER BY nombre
+
+    """)
+
+    # Obtiene todos los registros encontrados.
+    medicos = cursor.fetchall()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la lista de médicos.
+    return medico
+
+# BUSCAR MÉDICO
+# ----------------------------------------------------------
+
+# Busca un médico utilizando su número de cédula.
+def buscar_medico(cedula):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM medico
+
+        WHERE cedula = ?
+
+    """, (cedula,))
+
+    # Obtiene un solo registro.
+    medico = cursor.fetchone()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve el resultado obtenido.
+    return medico
+
+# ACTUALIZAR MÉDICO
+# ----------------------------------------------------------
+
+# Actualiza la información de un médico existente.
+def actualizar_medico(medico):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la actualización.
+    cursor.execute("""
+
+        UPDATE medico
+
+        SET
+
+        nombre = ?,
+
+        especialidad = ?,
+
+        telefono = ?,
+
+        consultorio = ?
+
+        WHERE cedula = ?
+
+    """, (
+
+        medico.get_nombre(),
+
+        medico.get_especialidad(),
+
+        medico.get_telefono(),
+
+        medico.get_consultorio(),
+
+        medico.get_cedula()
+
+    ))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# ELIMINAR MÉDICO
+# ----------------------------------------------------------
+
+# Elimina un médico utilizando su número de cédula.
+def eliminar_medico(cedula):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la eliminación.
+    cursor.execute("""
+
+        DELETE
+
+        FROM medico
+
+        WHERE cedula = ?
+
+    """, (cedula,))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# CONTAR MÉDICOS
+# ----------------------------------------------------------
+
+# Devuelve la cantidad total de médicos registrados.
+def contar_medico():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Cuenta todos los médicos registrados.
+    cursor.execute("""
+
+        SELECT COUNT(*)
+
+        FROM medico
+
+    """)
+
+    # Obtiene el resultado de la consulta.
+    cantidad = cursor.fetchone()[0]
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la cantidad encontrada.
+    return cantidad
+
+# REGISTRAR CITA
+# ----------------------------------------------------------
+
+# Esta función recibe un objeto Cita y lo almacena en la
+# base de datos.
+def registrar_cita(cita):
+
+    # Comprueba que exista el paciente.
+    if buscar_paciente(cita.get_id_paciente()) is None:
+        return False
+
+    # Comprueba que exista el médico.
+    if buscar_medico(cita.get_id_medico()) is None:
+        return False
+
+    # Abre la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la sentencia INSERT.
+    cursor.execute("""
+
+        INSERT INTO cita
+        (fecha, hora, estado, id_paciente, id_medico)
+
+        VALUES (?, ?, ?, ?, ?)
+
+    """, (
+
+        cita.get_fecha(),
+
+        cita.get_hora(),
+
+        cita.get_estado(),
+
+        cita.get_id_paciente(),
+
+        cita.get_id_medico()
+
+    ))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Indica que el registro fue exitoso.
+    return True
+
+# CONSULTAR CITAS
+# ----------------------------------------------------------
+
+# Devuelve todas las citas registradas.
+def consultar_citas():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Consulta las citas junto con el nombre del paciente y
+    # del médico mediante un JOIN.
+    cursor.execute("""
+
+        SELECT
+
+        citas.id,
+
+        citas.fecha,
+
+        citas.hora,
+
+        citas.estado,
+
+        pacientes.nombre,
+
+        medicos.nombre
+
+        FROM cita
+
+        INNER JOIN paciente
+
+        ON citas.id_paciente = pacientes.id
+
+        INNER JOIN medico
+
+        ON citas.id_medico = medicos.id
+
+        ORDER BY citas.fecha, citas.hora
+
+    """)
+
+    # Obtiene todos los registros.
+    citas = cursor.fetchall()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la lista de citas.
+    return citas
+
+# BUSCAR CITA
+# ----------------------------------------------------------
+
+# Busca una cita utilizando su identificador.
+def buscar_cita(id_cita):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM cita
+
+        WHERE id = ?
+
+    """, (id_cita,))
+
+    # Obtiene un único registro.
+    cita = cursor.fetchone()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve el resultado.
+    return cita
+
+# ACTUALIZAR CITA
+# ----------------------------------------------------------
+
+# Actualiza la información de una cita existente.
+def actualizar_cita(cita):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la actualización.
+    cursor.execute("""
+
+        UPDATE cita
+
+        SET
+
+        fecha = ?,
+
+        hora = ?,
+
+        estado = ?,
+
+        id_paciente = ?,
+
+        id_medico = ?
+
+        WHERE id = ?
+
+    """, (
+
+        cita.get_fecha(),
+
+        cita.get_hora(),
+
+        cita.get_estado(),
+
+        cita.get_id_paciente(),
+
+        cita.get_id_medico(),
+
+        cita.get_id()
+
+    ))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# ELIMINAR CITA
+# ----------------------------------------------------------
+
+# Elimina una cita utilizando su identificador.
+def eliminar_cita(id_cita):
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la eliminación.
+    cursor.execute("""
+
+        DELETE
+
+        FROM cita
+
+        WHERE id = ?
+
+    """, (id_cita,))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# CONTAR CITAS
+# ----------------------------------------------------------
+
+# Devuelve la cantidad total de citas registradas.
+def contar_citas():
+
+    # Abre la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Cuenta todas las citas.
+    cursor.execute("""
+
+        SELECT COUNT(*)
+
+        FROM cita
+
+    """)
+
+    # Obtiene el resultado.
+    cantidad = cursor.fetchone()[0]
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la cantidad de citas.
+    return cantidad
+
+# REGISTRAR HISTORIAL CLÍNICO
+# ----------------------------------------------------------
+
+# Esta función recibe un objeto HistorialClinico y guarda
+# su información dentro de la base de datos.
+def registrar_historial(historial):
+
+    # Verifica que el paciente exista.
+    if buscar_paciente_por_id(historial.get_id_paciente()) is None:
+        return False
+
+    # Establece la conexión con SQLite.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la sentencia INSERT.
+    cursor.execute("""
+
+        INSERT INTO historial_clinico
+        (fecha, diagnostico, tratamiento, id_paciente)
+
+        VALUES (?, ?, ?, ?)
+
+    """, (
+
+        historial.get_fecha(),
+
+        historial.get_diagnostico(),
+
+        historial.get_tratamiento(),
+
+        historial.get_id_paciente()
+
+    ))
+
+    # Guarda los cambios realizados.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Indica que el registro fue exitoso.
+    return True
+
+# CONSULTAR HISTORIALES CLÍNICOS
+# ----------------------------------------------------------
+
+# Devuelve todos los historiales registrados.
+def consultar_historiales():
+
+    # Establece la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Consulta todos los historiales junto con el nombre
+    # del paciente.
+    cursor.execute("""
+
+        SELECT
+
+        historial_clinico.id,
+
+        historial_clinico.fecha,
+
+        historial_clinico.diagnostico,
+
+        historial_clinico.tratamiento,
+
+        pacientes.nombre
+
+        FROM historial_clinico
+
+        INNER JOIN paciente
+
+        ON historial_clinico.id_paciente = pacientes.id
+
+        ORDER BY historial_clinico.fecha DESC
+
+    """)
+
+    # Obtiene todos los registros.
+    historiales = cursor.fetchall()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la lista obtenida.
+    return historiales
+
+# BUSCAR HISTORIAL CLÍNICO
+# ----------------------------------------------------------
+
+# Busca un historial clínico mediante su identificador.
+def buscar_historial(id_historial):
+
+    # Establece la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta.
+    cursor.execute("""
+
+        SELECT *
+
+        FROM historial_clinico
+
+        WHERE id = ?
+
+    """, (id_historial,))
+
+    # Obtiene un solo registro.
+    historial = cursor.fetchone()
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve el historial encontrado.
+    return historial
+
+# ACTUALIZAR HISTORIAL CLÍNICO
+# ----------------------------------------------------------
+
+# Actualiza la información de un historial clínico.
+def actualizar_historial(historial):
+
+    # Establece la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la actualización.
+    cursor.execute("""
+
+        UPDATE historial_clinico
+
+        SET
+
+        fecha = ?,
+
+        diagnostico = ?,
+
+        tratamiento = ?,
+
+        id_paciente = ?
+
+        WHERE id = ?
+
+    """, (
+
+        historial.get_fecha(),
+
+        historial.get_diagnostico(),
+
+        historial.get_tratamiento(),
+
+        historial.get_id_paciente(),
+
+        historial.get_id()
+
+    ))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# Devuelve el ID del paciente
+    def get_id_paciente(self):
+        return self.__id_paciente
+# Devuelve el identificador del historial clínico.
+    def get_id(self):
+        return self.__id_historial
+
+# ELIMINAR HISTORIAL CLÍNICO
+# ----------------------------------------------------------
+
+# Elimina un historial clínico mediante su identificador.
+def eliminar_historial(id_historial):
+
+    # Establece la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Ejecuta la sentencia DELETE.
+    cursor.execute("""
+
+        DELETE
+
+        FROM historial_clinico
+
+        WHERE id = ?
+
+    """, (id_historial,))
+
+    # Guarda los cambios.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+
+# CONTAR HISTORIALES CLÍNICOS
+# ----------------------------------------------------------
+
+# Devuelve la cantidad total de historiales clínicos.
+def contar_historiales():
+
+    # Establece la conexión.
+    conexion = conectar_bd()
+
+    # Crea el cursor.
+    cursor = conexion.cursor()
+
+    # Cuenta todos los historiales.
+    cursor.execute("""
+
+        SELECT COUNT(*)
+
+        FROM historial_clinico
+
+    """)
+
+    # Obtiene el resultado.
+    cantidad = cursor.fetchone()[0]
+
+    # Cierra la conexión.
+    conexion.close()
+
+    # Devuelve la cantidad encontrada.
+    return cantidad
+    
 # Crea la ventana principal del programa
 ventana = Tk()
 
