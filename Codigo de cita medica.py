@@ -338,64 +338,75 @@ class ListaDoblementeEnlazada:
 
         # Devuelve todas las citas
         return datos   
-# ===========================================
-# BASE DE DATOS
-# ===========================================
 
-# PASO 1: Conectar con la base de datos
-conexion = sqlite3.connect("clinica.db")  # Si el archivo no existe,SQLite lo crea automáticamente
+# CONFIGURACIÓN DE LA BASE DE DATOS
+# ==========================================================
 
-# PASO 2: Crear el cursor para ejecutar instrucciones SQL
-cursor = conexion.cursor()
+# Obtiene automáticamente la carpeta Documentos del usuario.
+ruta_documentos = os.path.join(os.path.expanduser("~"), "Documents")
 
-# PASO 3: Crear la tabla de pacientes si todavía no existe
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS pacientes(
+# Crea la ruta completa donde se almacenará la base de datos.
+ruta_base_datos = os.path.join(ruta_documentos, "clinica.db")
+def conectar_bd():
 
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT,
-    cedula TEXT,
-    edad INTEGER,
-    telefono TEXT
+    # Crea la conexión con la base de datos.
+    conexion = sqlite3.connect(ruta_base_datos)
 
-)
-""")
+    # Devuelve la conexión para que pueda ser utilizada
+    # por otras funciones del programa.
+    return conexion
+    
+# Esta función crea todas las tablas del sistema.
+# Solo se crearán una vez.
+# Si las tablas ya existen, SQLite no las volverá a crear.
 
-# PASO 4: Insertar el primer paciente en la base de datos
-cursor.execute(
-    "INSERT INTO pacientes(nombre,cedula,edad,telefono) VALUES (?,?,?,?)",
-    ("Pedro Vera","0954789652",21,"0984697459")  # Valores que se guardarán en la tabla
-)
+def crear_tablas():
 
-# Insertar el segundo paciente
-cursor.execute(
-    "INSERT INTO pacientes(nombre,cedula,edad,telefono) VALUES (?,?,?,?)",
-    ("María López","0912345678",30,"0914795672")  # Valores que se guardarán en la tabla
-)
+    # Se establece la conexión con la base de datos.
+    conexion = conectar_bd()
 
-# Insertar el tercer paciente
-cursor.execute(
-    "INSERT INTO pacientes(nombre,cedula,edad,telefono) VALUES (?,?,?,?)",
-    ("Carlos Pizarro","0985867412",20,"0974965178")  # Valores que se guardarán en la tabla
-)
-# PASO 5: Guardar todos los cambios realizados en la base de datos
-conexion.commit()
+    # Se crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+    
+    # Crea la tabla de paciente.
+    cursor.execute("""
 
-# PASO 6: Consultar todos los registros de la tabla pacientes
-cursor.execute("SELECT * FROM pacientes")
+        CREATE TABLE IF NOT EXISTS paciente(
 
-# PASO 7: Obtener todos los registros encontrados
-resultados = cursor.fetchall()
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-print("PACIENTES REGISTRADOS")  # Mostrar un título en la consola
+            nombre TEXT NOT NULL,
 
-# PASO 8: Reocrrer cada registro obtenido y mostrarlo
-for fila in resultados:
-    print(fila)
+            cedula TEXT UNIQUE NOT NULL,
 
-# PASO 9: Cerrar la conexión con la base de datos
-conexion.close()
+            edad INTEGER NOT NULL,
 
+            telefono TEXT NOT NULL
+
+        )
+
+    """)
+
+# Crea la tabla de médico.
+    cursor.execute("""
+
+        CREATE TABLE IF NOT EXISTS medico(
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            nombre TEXT NOT NULL,
+
+            cedula TEXT UNIQUE NOT NULL,
+
+            especialidad TEXT NOT NULL,
+
+            telefono TEXT NOT NULL,
+
+            consultorio TEXT NOT NULL
+
+        )
+
+    """)
 # ===========================================
 # INTERFAZ GRÁFICA
 # ===========================================
