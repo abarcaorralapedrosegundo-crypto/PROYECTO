@@ -342,8 +342,11 @@ class ListaDoblementeEnlazada:
         # Devuelve todas las citas
         return datos   
 
-# CONFIGURACIÓN DE LA BASE DE DATOS
 # ==========================================================
+# BASE DE DATOS
+# ==========================================================
+
+# CONFIGURACIÓN DE LA BASE DE DATOS
 
 # Obtiene automáticamente la carpeta Documentos del usuario.
 ruta_documentos = os.path.join(os.path.expanduser("~"), "Documents")
@@ -1378,26 +1381,452 @@ def contar_historiales():
 
     # Devuelve la cantidad encontrada.
     return cantidad
-    
-# Crea la ventana principal del programa
+# ==========================================================
+# INTERFAZ GRAFICA
+# ==========================================================
+# Crea la ventana principal del sistema
 ventana = Tk()
 
-ventana.title("Sistema de Citas Médicas")  # Coloca un título en la barra superior de la ventana
-ventana.geometry("400x250")  # Define el tamaño de la ventana (ancho x alto)
+# Asigna el título que aparecerá en la barra superior
+ventana.title("Sistema de Gestión de Citas Médicas")
 
-# Crea un texto de bienvenida y lo coloca en la ventana
-Label(ventana, text="Sistema de Gestión de Citas Médicas").pack(pady=15)
+# Define el ancho y alto de la ventana
+ventana.geometry("850x600")
 
-# Crea un botón para registrar pacientes
-Button(ventana, text="Registrar Paciente").pack(pady=5)
+# Impide que el usuario cambie el tamaño de la ventana
+ventana.resizable(False, False)
 
-# Crea un botón para consultar los pacientes registrados
-Button(ventana, text="Consultar Pacientes").pack(pady=5)
+# Cambia el color de fondo de la ventana
+ventana.configure(bg="#EAF4FC")
 
-# Crea un botón para agendar una cita médica
-Button(ventana, text="Agendar Cita").pack(pady=5)
+# Muestra el nombre del sistema.
+titulo = Label(
 
-# Crea un botón para cerrar la aplicación
-Button(ventana, text="Salir", command=ventana.destroy).pack(pady=15)
+    ventana,
 
-ventana.mainloop()  # Mantiene la ventana abierta hasta que el usuario la cierre
+    text="SISTEMA DE GESTIÓN DE CITAS MÉDICAS",
+
+    font=("Arial", 20, "bold"),
+
+    bg="#EAF4FC",
+
+    fg="#003366"
+
+)
+
+# Coloca el título en la ventana.
+titulo.pack(pady=20)
+
+# Crea un Frame para organizar todos los botones del menú.
+frame_botones = Frame(
+
+    ventana,
+
+    bg="#EAF4FC"
+
+)
+
+# Coloca el Frame en la ventana.
+frame_botones.pack(pady=35)
+
+# Este botón abrirá la ventana de administración
+# de pacientes.
+btn_pacientes = Button(
+
+    frame_botones,
+
+    text="👤 Pacientes",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_pacientes()
+
+)
+
+# Coloca el botón en pantalla.
+btn_pacientes.pack(pady=6)
+
+# Este botón abrirá la ventana de administración
+# de médicos.
+btn_medicos = Button(
+
+    frame_botones,
+
+    text="🩺 Médicos",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_medicos()
+
+)
+
+# Coloca el botón.
+btn_medicos.pack(pady=6)
+
+# Este botón permitirá administrar las citas médicas.
+btn_citas = Button(
+
+    frame_botones,
+
+    text="📅 Citas Médicas",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_citas()
+
+)
+
+# Coloca el botón.
+btn_citas.pack(pady=6)
+
+# Este botón abrirá la ventana del historial clínico.
+btn_historial = Button(
+
+    frame_botones,
+
+    text="📋 Historial Clínico",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_historial()
+
+)
+
+# Coloca el botón.
+btn_historial.pack(pady=6)
+
+# Este botón administrará la cola de espera.
+btn_cola = Button(
+
+    frame_botones,
+
+    text="⏳ Sala de Espera",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_cola()
+
+)
+
+# Coloca el botón.
+btn_cola.pack(pady=6)
+
+# Este botón mostrará información general del sistema.
+btn_estadisticas = Button(
+
+    frame_botones,
+
+    text="📊 Estadísticas",
+
+    width=25,
+
+    height=2,
+
+    font=("Arial", 11, "bold"),
+
+    command=lambda: abrir_ventana_estadisticas()
+
+)
+
+# Coloca el botón.
+btn_estadisticas.pack(pady=6)
+
+# Este botón finaliza la ejecución del sistema.
+btn_salir = Button(
+
+    frame_botones,
+
+    text="Salir",
+
+    width=25,
+
+    height=2,
+
+    bg="#C62828",
+
+    fg="white",
+
+    font=("Arial", 11, "bold"),
+
+    command=ventana.destroy
+
+)
+
+# Coloca el botón.
+btn_salir.pack(pady=12)
+
+# Inicia el ciclo principal de la interfaz gráfica.
+ventana.mainloop()
+
+# Esta función crea la ventana donde se administrarán
+# todos los pacientes del sistema.
+def abrir_ventana_pacientes():
+
+    # Crea una nueva ventana independiente.
+    ventana_pacientes = Toplevel()
+
+    # Asigna el título de la ventana.
+    ventana_pacientes.title("Administración de Pacientes")
+
+    # Define el tamaño de la ventana.
+    ventana_pacientes.geometry("900x650")
+
+    # Impide modificar el tamaño.
+    ventana_pacientes.resizable(False, False)
+
+    # Cambia el color de fondo.
+    ventana_pacientes.configure(bg="#EAF4FC")
+
+# Muestra el nombre de la ventana.
+    Label(
+
+        ventana_pacientes,
+
+        text="REGISTRO DE PACIENTES",
+
+        font=("Arial",18,"bold"),
+
+        bg="#EAF4FC",
+
+        fg="#003366"
+
+    ).pack(pady=15)
+
+# Contendrá todos los campos del formulario.
+    frame_datos = Frame(
+
+        ventana_pacientes,
+
+        bg="#EAF4FC"
+
+    )
+
+    frame_datos.pack(pady=10)
+
+Label(
+
+        frame_datos,
+
+        text="Nombre:",
+
+        font=("Arial",11),
+
+        bg="#EAF4FC"
+
+    ).grid(row=0,column=0,padx=10,pady=8,sticky="e")
+
+    entry_nombre = Entry(
+
+        frame_datos,
+
+        width=35
+
+    )
+
+    entry_nombre.grid(row=0,column=1,pady=8)
+
+Label(
+
+        frame_datos,
+
+        text="Cédula:",
+
+        font=("Arial",11),
+
+        bg="#EAF4FC"
+
+    ).grid(row=1,column=0,padx=10,pady=8,sticky="e")
+
+    entry_cedula = Entry(
+
+        frame_datos,
+
+        width=35
+
+    )
+
+    entry_cedula.grid(row=1,column=1,pady=8)
+
+Label(
+
+        frame_datos,
+
+        text="Edad:",
+
+        font=("Arial",11),
+
+        bg="#EAF4FC"
+
+    ).grid(row=2,column=0,padx=10,pady=8,sticky="e")
+
+    entry_edad = Entry(
+
+        frame_datos,
+
+        width=35
+
+    )
+
+    entry_edad.grid(row=2,column=1,pady=8)
+
+Label(
+
+        frame_datos,
+
+        text="Teléfono:",
+
+        font=("Arial",11),
+
+        bg="#EAF4FC"
+
+    ).grid(row=3,column=0,padx=10,pady=8,sticky="e")
+
+    entry_telefono = Entry(
+
+        frame_datos,
+
+        width=35
+
+    )
+
+    entry_telefono.grid(row=3,column=1,pady=8)
+
+# Agrupa todos los botones del formulario.
+    frame_botones = Frame(
+
+        ventana_pacientes,
+
+        bg="#EAF4FC"
+
+    )
+
+    frame_botones.pack(pady=15)
+
+ Button(
+
+        frame_botones,
+
+        text="Registrar",
+
+        width=12
+
+    ).grid(row=0,column=0,padx=5)
+
+    # ------------------------------------------------------
+    # BOTÓN BUSCAR
+    # ------------------------------------------------------
+
+    Button(
+
+        frame_botones,
+
+        text="Buscar",
+
+        width=12
+
+    ).grid(row=0,column=1,padx=5)
+
+    # ------------------------------------------------------
+    # BOTÓN ACTUALIZAR
+    # ------------------------------------------------------
+
+    Button(
+
+        frame_botones,
+
+        text="Actualizar",
+
+        width=12
+
+    ).grid(row=0,column=2,padx=5)
+
+    # ------------------------------------------------------
+    # BOTÓN ELIMINAR
+    # ------------------------------------------------------
+
+    Button(
+
+        frame_botones,
+
+        text="Eliminar",
+
+        width=12
+
+    ).grid(row=0,column=3,padx=5)
+
+    # ------------------------------------------------------
+    # BOTÓN LIMPIAR
+    # ------------------------------------------------------
+
+    Button(
+
+        frame_botones,
+
+        text="Limpiar",
+
+        width=12
+
+    ).grid(row=0,column=4,padx=5)
+
+    # ------------------------------------------------------
+    # BOTÓN CERRAR
+    # ------------------------------------------------------
+
+    Button(
+
+        frame_botones,
+
+        text="Cerrar",
+
+        width=12,
+
+        command=ventana_pacientes.destroy
+
+    ).grid(row=0,column=5,padx=5)
+
+# Crea la tabla donde se mostrarán los pacientes.
+    tabla = ttk.Treeview(
+
+        ventana_pacientes,
+
+        columns=("ID","Nombre","Cedula","Edad","Telefono"),
+
+        show="headings",
+
+        height=12
+
+    )
+
+    tabla.heading("ID",text="ID")
+    tabla.heading("Nombre",text="Nombre")
+    tabla.heading("Cedula",text="Cédula")
+    tabla.heading("Edad",text="Edad")
+    tabla.heading("Telefono",text="Teléfono")
+
+    tabla.column("ID",width=50,anchor="center")
+    tabla.column("Nombre",width=220)
+    tabla.column("Cedula",width=150)
+    tabla.column("Edad",width=80,anchor="center")
+    tabla.column("Telefono",width=150)
+
+    tabla.pack(pady=20)
