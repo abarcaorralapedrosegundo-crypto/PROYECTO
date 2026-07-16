@@ -407,6 +407,62 @@ def crear_tablas():
         )
 
     """)
+
+# Crea la tabla donde se almacenarán todas las cita.
+    cursor.execute("""
+
+        CREATE TABLE IF NOT EXISTS cita(
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            fecha TEXT NOT NULL,
+
+            hora TEXT NOT NULL,
+
+            estado TEXT NOT NULL,
+
+            id_paciente INTEGER NOT NULL,
+
+            id_medico INTEGER NOT NULL,
+
+            FOREIGN KEY(id_paciente) REFERENCES pacientes(id),
+
+            FOREIGN KEY(id_medico) REFERENCES medicos(id)
+
+        )
+
+    """)
+    # Crea la tabla del historial clínico.
+    cursor.execute("""
+
+        CREATE TABLE IF NOT EXISTS historial_clinico(
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            fecha TEXT NOT NULL,
+
+            diagnostico TEXT NOT NULL,
+
+            tratamiento TEXT NOT NULL,
+
+            id_paciente INTEGER NOT NULL,
+
+            FOREIGN KEY(id_paciente) REFERENCES pacientes(id)
+
+        )
+
+    """)
+    # GUARDAR LOS CAMBIOS
+    # ------------------------------------------------------
+
+    # Guarda todas las tablas creadas.
+    conexion.commit()
+
+    # Cierra la conexión.
+    conexion.close()
+    # Cuando el programa inicie se crearán automáticamente
+# todas las tablas del sistema.
+crear_tablas()
 # ===========================================
 # INTERFAZ GRÁFICA
 # ===========================================
