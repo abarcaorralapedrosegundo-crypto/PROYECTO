@@ -312,8 +312,6 @@ cursor.execute("""
 
         nombre TEXT NOT NULL,
 
-        cedula TEXT UNIQUE NOT NULL,
-
         especialidad TEXT NOT NULL,
 
         telefono TEXT NOT NULL,
@@ -411,26 +409,26 @@ cursor.execute(
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Carlos Mora","1100110011","Cardiología","0981111111","101")
+    ("Carlos Mora","Cardiología","0981111111","101")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Ana Torres","1200124785","Pediatría","0982222222","102")
+    ("Ana Torres","Pediatría","0982222222","102")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Luis Gómez","1236543795","Dermatología","0983333333","103")
+    ("Luis Gómez","Dermatología","0983333333","103")
 )
 
     # -----------------------------
