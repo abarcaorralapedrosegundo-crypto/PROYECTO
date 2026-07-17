@@ -743,4 +743,348 @@ def limpiar_campos():
 # ===========================================
 # INTERFAZ GRÁFICA
 # ===========================================
+# Crea la ventana principal del sistema.
+ventana = Tk()
 
+# Asigna un título a la ventana.
+ventana.title("Sistema de Gestión de Citas Médicas")
+
+# Define el tamaño de la ventana.
+ventana.geometry("650x500")
+
+# Evita que el usuario pueda cambiar el tamaño.
+ventana.resizable(False, False)
+
+# Cambia el color de fondo de la ventana.
+ventana.configure(bg="#EAF4FC")
+
+# Título principal del sistema.
+Label(
+    ventana,
+    text="SISTEMA DE GESTIÓN DE CITAS MÉDICAS",
+    font=("Arial", 18, "bold"),
+    bg="#EAF4FC",
+    fg="#003366"
+).pack(pady=20)
+
+# Agrega un espacio para mejorar la presentación.
+Label(
+    ventana,
+    text="",
+    bg="#EAF4FC"
+).pack(pady=10)
+
+# Crea un Frame para organizar los botones del sistema.
+frame_botones = Frame(
+    ventana,
+    bg="#EAF4FC"
+)
+
+# Coloca el Frame dentro de la ventana principal.
+frame_botones.pack(pady=20)
+
+# ----------------------------------------------------------
+# BOTONES DEL SISTEMA
+# ----------------------------------------------------------
+
+# Botón para registrar un paciente.
+Button(
+    frame_botones,
+    text="Registrar Paciente",
+    width=22,
+    height=2,
+    command=ventana_registrar_paciente
+).grid(row=0, column=0, padx=10, pady=10)
+
+# Botón para consultar pacientes.
+Button(
+    frame_botones,
+    text="Consultar Pacientes",
+    width=22,
+    height=2,
+    command=ventana_consultar_pacientes
+).grid(row=0, column=1, padx=10, pady=10)
+
+# Botón para registrar un médico.
+Button(
+    frame_botones,
+    text="Registrar Médico",
+    width=22,
+    height=2,
+    command=ventana_registrar_medico
+).grid(row=1, column=0, padx=10, pady=10)
+
+# Botón para consultar médicos.
+Button(
+    frame_botones,
+    text="Consultar Médicos",
+    width=22,
+    height=2,
+    command=ventana_consultar_medicos
+).grid(row=1, column=1, padx=10, pady=10)
+
+# Botón para registrar una cita.
+Button(
+    frame_botones,
+    text="Registrar Cita",
+    width=22,
+    height=2,
+    command=ventana_registrar_cita
+).grid(row=2, column=0, padx=10, pady=10)
+
+# Botón para consultar citas.
+Button(
+    frame_botones,
+    text="Consultar Citas",
+    width=22,
+    height=2,
+    command=ventana_consultar_citas
+).grid(row=2, column=1, padx=10, pady=10)
+
+# Botón para registrar un historial clínico.
+Button(
+    frame_botones,
+    text="Historial Clínico",
+    width=22,
+    height=2,
+    command=ventana_historial
+).grid(row=3, column=0, padx=10, pady=10)
+
+# Botón para cerrar el sistema.
+Button(
+    frame_botones,
+    text="Salir",
+    width=22,
+    height=2,
+    bg="#B22222",
+    fg="white",
+    command=ventana.destroy
+).grid(row=3, column=1, padx=10, pady=10)
+
+# Esta función abre la ventana para registrar pacientes.
+def ventana_registrar_paciente():
+
+    # Crea una nueva ventana.
+    ventana_paciente = Toplevel()
+
+    # Asigna un título.
+    ventana_paciente.title("Registrar Paciente")
+
+    # Define el tamaño de la ventana.
+    ventana_paciente.geometry("450x350")
+
+    # Impide modificar el tamaño.
+    ventana_paciente.resizable(False, False)
+
+    # Cambia el color de fondo.
+    ventana_paciente.configure(bg="#EAF4FC")
+
+# Etiqueta del nombre.
+Label(
+    ventana_paciente,
+    text="Nombre:",
+    bg="#EAF4FC"
+).place(x=30, y=40)
+
+# Caja para ingresar el nombre.
+entrada_nombre = Entry(ventana_paciente, width=30)
+entrada_nombre.place(x=150, y=40)
+
+# Etiqueta de la cédula.
+Label(
+    ventana_paciente,
+    text="Cédula:",
+    bg="#EAF4FC"
+).place(x=30, y=80)
+
+# Caja para ingresar la cédula.
+entrada_cedula = Entry(ventana_paciente, width=30)
+entrada_cedula.place(x=150, y=80)
+
+# Etiqueta de la edad.
+Label(
+    ventana_paciente,
+    text="Edad:",
+    bg="#EAF4FC"
+).place(x=30, y=120)
+
+# Caja para ingresar la edad.
+entrada_edad = Entry(ventana_paciente, width=30)
+entrada_edad.place(x=150, y=120)
+
+# Etiqueta del teléfono.
+Label(
+    ventana_paciente,
+    text="Teléfono:",
+    bg="#EAF4FC"
+).place(x=30, y=160)
+
+# Caja para ingresar el teléfono.
+entrada_telefono = Entry(ventana_paciente, width=30)
+entrada_telefono.place(x=150, y=160)
+
+# Muestra el título de la ventana.
+Label(
+    ventana_paciente,
+    text="Registro de Paciente",
+    font=("Arial", 15, "bold"),
+    bg="#EAF4FC",
+    fg="darkblue"
+).pack(pady=10)
+
+# ----------------------------------------------------------
+# FRAME DEL FORMULARIO
+# ----------------------------------------------------------
+
+# Crea un contenedor para organizar los controles.
+frame_formulario = Frame(
+    ventana_paciente,
+    bg="#EAF4FC"
+)
+
+# Coloca el Frame en la ventana.
+frame_formulario.pack(pady=10)
+
+# ----------------------------------------------------------
+# NOMBRE
+# ----------------------------------------------------------
+
+# Etiqueta del nombre.
+Label(
+    frame_formulario,
+    text="Nombre:",
+    bg="#EAF4FC"
+).grid(row=0, column=0, padx=10, pady=5, sticky="e")
+
+# Caja donde el usuario escribirá el nombre.
+entrada_nombre = Entry(frame_formulario, width=30)
+
+# Coloca la caja de texto.
+entrada_nombre.grid(row=0, column=1, padx=10, pady=5)
+
+# ----------------------------------------------------------
+# CÉDULA
+# ----------------------------------------------------------
+
+Label(
+    frame_formulario,
+    text="Cédula:",
+    bg="#EAF4FC"
+).grid(row=1, column=0, padx=10, pady=5, sticky="e")
+
+entrada_cedula = Entry(frame_formulario, width=30)
+
+entrada_cedula.grid(row=1, column=1, padx=10, pady=5)
+
+# ----------------------------------------------------------
+# EDAD
+# ----------------------------------------------------------
+
+Label(
+    frame_formulario,
+    text="Edad:",
+    bg="#EAF4FC"
+).grid(row=2, column=0, padx=10, pady=5, sticky="e")
+
+entrada_edad = Entry(frame_formulario, width=30)
+
+entrada_edad.grid(row=2, column=1, padx=10, pady=5)
+
+# ----------------------------------------------------------
+# TELÉFONO
+# ----------------------------------------------------------
+
+Label(
+    frame_formulario,
+    text="Teléfono:",
+    bg="#EAF4FC"
+).grid(row=3, column=0, padx=10, pady=5, sticky="e")
+
+entrada_telefono = Entry(frame_formulario, width=30)
+
+entrada_telefono.grid(row=3, column=1, padx=10, pady=5)
+
+# Guarda la información ingresada por el usuario.
+Button(
+
+    ventana_paciente,
+
+    text="Guardar Paciente",
+
+    width=20,
+
+    bg="green",
+
+    fg="white",
+
+    command=lambda: registrar_paciente(
+
+        entrada_nombre.get(),
+
+        entrada_cedula.get(),
+
+        entrada_edad.get(),
+
+        entrada_telefono.get()
+
+    )
+
+).pack(pady=15)
+
+# Crea un Frame para organizar los botones.
+frame_botones = Frame(
+
+    ventana_paciente,
+
+    bg="#EAF4FC"
+
+)
+
+# Coloca el Frame.
+frame_botones.pack(pady=10)
+
+# ----------------------------------------------------------
+# BOTÓN LIMPIAR
+# ----------------------------------------------------------
+
+Button(
+
+    frame_botones,
+
+    text="Limpiar",
+
+    width=15,
+
+    command=lambda: [
+
+        entrada_nombre.delete(0, END),
+
+        entrada_cedula.delete(0, END),
+
+        entrada_edad.delete(0, END),
+
+        entrada_telefono.delete(0, END)
+
+    ]
+
+).grid(row=0, column=0, padx=10)
+
+# ----------------------------------------------------------
+# BOTÓN CERRAR
+# ----------------------------------------------------------
+
+Button(
+
+    frame_botones,
+
+    text="Cerrar",
+
+    width=15,
+
+    bg="firebrick",
+
+    fg="white",
+
+    command=ventana_paciente.destroy
+
+).grid(row=0, column=1, padx=10)
