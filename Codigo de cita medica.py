@@ -3,7 +3,6 @@ Integrantes: Abarca Orrala Pedro Segundo, Delacruz Castillo Henry Alexander,
 Lopez Mendoza Genessis Milena, Piedra Ortega Francisco Andres, 
 Quinde Eugenio Julexi Tatiana'''
 # Librerías
-import os  # Permite trabajar con carpetas y rutas del sistema operativo
 import sqlite3  # Importa la librería sqlite3 para trabajar con bases de datos SQLite
 from collections import deque  # Importa la estructura deque,que se utilizará como una cola (FIFO)
 from tkinter import *  # Importa todos los componentes de Tkinter para crear la interfaz gráfica
@@ -307,12 +306,13 @@ cursor.execute("""
     """)
 
 cursor.execute("""
-
     CREATE TABLE IF NOT EXISTS medico(
 
         id_medico INTEGER PRIMARY KEY AUTOINCREMENT,
 
         nombre TEXT NOT NULL,
+
+        cedula TEXT UNIQUE NOT NULL,
 
         especialidad TEXT NOT NULL,
 
@@ -321,9 +321,8 @@ cursor.execute("""
         consultorio TEXT NOT NULL
 
     )
-
     """)
-
+    
     # -----------------------------------------------------
     # TABLA CITA
     # -----------------------------------------------------
@@ -412,26 +411,26 @@ cursor.execute(
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?,?)
     """,
-    ("Carlos Mora","Cardiología","0981111111","101")
+    ("Carlos Mora","1100110011","Cardiología","0981111111","101")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?,?)
     """,
-    ("Ana Torres","Pediatría","0982222222","102")
+    ("Ana Torres","1200124785","Pediatría","0982222222","102")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?,?)
     """,
-    ("Luis Gómez","Dermatología","0983333333","103")
+    ("Luis Gómez","1236543795","Dermatología","0983333333","103")
 )
 
     # -----------------------------
