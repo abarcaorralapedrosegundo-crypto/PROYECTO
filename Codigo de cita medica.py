@@ -283,35 +283,16 @@ for paciente in pacientes:
 # ===========================================
 
 # PASO 1: Conectar con la base de datos
-# Obtiene automáticamente la carpeta Documentos del usuario
-ruta_documentos = os.path.join(os.path.expanduser("~"), "Documents")
-
-# Define la ruta donde se guardará la base de datos.
-ruta_base_datos = os.path.join(ruta_documentos, "clinica.db")
-
-# Función que crea la conexión con SQLite.
-def conectar_bd():
-
-    # Establece la conexión.
-    conexion = sqlite3.connect(ruta_base_datos)
-
-    # Devuelve la conexión.
-    return conexion
-
-# Función que crea todas las tablas del sistema.
-def crear_base_datos():
-
-    # Abre la conexión.
-    conexion = conectar_bd()
+conexion = sqlite3.connect("clinica.db")  # Si el archivo no existe,SQLite lo crea automáticamente
 
 # PASO 2: Crear el cursor para ejecutar instrucciones SQL
 cursor = conexion.cursor()
 
 # PASO 3: Creacion de las tablas si todavía no existe
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS paciente(
+    CREATE TABLE IF NOT EXISTS paciente(
 
-    id_paciente INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_paciente INTEGER PRIMARY KEY AUTOINCREMENT,
 
         nombre TEXT NOT NULL,
 
@@ -347,7 +328,7 @@ cursor.execute("""
     # TABLA CITA
     # -----------------------------------------------------
 
-    cursor.execute("""
+cursor.execute("""
 
     CREATE TABLE IF NOT EXISTS cita(
 
@@ -375,7 +356,7 @@ cursor.execute("""
     # TABLA HISTORIAL CLINICO
     # -----------------------------------------------------
 
-    cursor.execute("""
+cursor.execute("""
 
     CREATE TABLE IF NOT EXISTS historial_clinico(
 
@@ -395,14 +376,6 @@ cursor.execute("""
 
     """)
 # PASO 4: Insertar el primer paciente en la base de datos
-# Función que inserta registros de ejemplo.
-def insertar_registros():
-
-    # Abre la conexión.
-    conexion = conectar_bd()
-
-    # Crea el cursor.
-    cursor = conexion.cursor()
 
     # -----------------------------
     # PACIENTES
@@ -439,26 +412,26 @@ cursor.execute(
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Carlos Mora","1100110011","Cardiología","0981111111","101")
+    ("Carlos Mora","Cardiología","0981111111","101")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Ana Torres","1100220022","Pediatría","0982222222","102")
+    ("Ana Torres","Pediatría","0982222222","102")
 )
 
 cursor.execute(
     """
-    INSERT OR IGNORE INTO medico(nombre,cedula,especialidad,telefono,consultorio)
-    VALUES(?,?,?,?,?)
+    INSERT OR IGNORE INTO medico(nombre,especialidad,telefono,consultorio)
+    VALUES(?,?,?,?)
     """,
-    ("Luis Gómez","1100330033","Dermatología","0983333333","103")
+    ("Luis Gómez","Dermatología","0983333333","103")
 )
 
     # -----------------------------
