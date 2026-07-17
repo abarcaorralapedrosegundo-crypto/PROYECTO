@@ -440,7 +440,182 @@ crear_tablas()
 # ===========================================
 # FUNCIONES DEL SISTEMA
 # ===========================================
+# Esta función registra un nuevo paciente en la base de datos.
+def registrar_paciente(nombre, cedula, edad, telefono):
+    # Verifica que todos los campos tengan información.
+if nombre == "" or cedula == "" or edad == "" or telefono == "":
 
+    # Muestra un mensaje de advertencia.
+    messagebox.showwarning(
+        "Campos vacíos",
+        "Complete todos los datos del paciente."
+    )
+
+    # Finaliza la función sin guardar información.
+    return
+    
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para insertar un nuevo paciente.
+    cursor.execute(
+        """
+        INSERT INTO paciente(nombre, cedula, edad, telefono)
+        VALUES(?, ?, ?, ?)
+        """,
+        (nombre, cedula, edad, telefono)
+    )
+
+    # Guarda los cambios realizados en la base de datos.
+    conexion.commit()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Agrega el nombre del paciente a la cola de espera.
+    ingresar_cola(nombre)
+
+    # Muestra un mensaje indicando que el registro fue exitoso.
+    messagebox.showinfo(
+        "Registro exitoso",
+        "Paciente registrado correctamente."
+    )
+
+# Esta función obtiene todos los pacientes registrados.
+def consultar_pacientes():
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para obtener todos los pacientes.
+    cursor.execute("""
+        SELECT * FROM paciente
+    """)
+
+    # Guarda todos los registros obtenidos.
+    pacientes = cursor.fetchall()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Devuelve la lista de pacientes.
+    return pacientes
+
+# Esta función registra un nuevo médico en la base de datos.
+def registrar_medico(nombre, cedula, especialidad, telefono, consultorio):
+
+    # Verifica que todos los campos tengan información.
+    if nombre == "" or cedula == "" or especialidad == "" or telefono == "" or consultorio == "":
+
+        # Muestra un mensaje indicando que existen campos vacíos.
+        messagebox.showwarning(
+            "Campos vacíos",
+            "Complete todos los datos del médico."
+        )
+
+        # Finaliza la función.
+        return
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para registrar un nuevo médico.
+    cursor.execute(
+        """
+        INSERT INTO medico(nombre, cedula, especialidad, telefono, consultorio)
+        VALUES(?, ?, ?, ?, ?)
+        """,
+        (nombre, cedula, especialidad, telefono, consultorio)
+    )
+
+    # Guarda los cambios realizados en la base de datos.
+    conexion.commit()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Muestra un mensaje indicando que el registro fue exitoso.
+    messagebox.showinfo(
+        "Registro exitoso",
+        "Médico registrado correctamente."
+    )
+
+# Esta función obtiene todos los médicos registrados.
+def consultar_medicos():
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para obtener todos los médicos.
+    cursor.execute("""
+        SELECT * FROM medico
+    """)
+
+    # Guarda todos los registros obtenidos.
+    medicos = cursor.fetchall()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Devuelve la lista de médicos.
+    return medicos
+
+# Esta función registra una nueva cita médica.
+def registrar_cita(fecha, hora, estado, id_paciente, id_medico):
+
+    # Verifica que todos los campos tengan información.
+    if fecha == "" or hora == "" or estado == "" or id_paciente == "" or id_medico == "":
+
+        # Muestra un mensaje indicando que existen campos vacíos.
+        messagebox.showwarning(
+            "Campos vacíos",
+            "Complete todos los datos de la cita."
+        )
+
+        # Finaliza la función.
+        return
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para registrar una nueva cita.
+    cursor.execute(
+        """
+        INSERT INTO cita(fecha, hora, estado, id_paciente, id_medico)
+        VALUES(?, ?, ?, ?, ?)
+        """,
+        (fecha, hora, estado, id_paciente, id_medico)
+    )
+
+    # Guarda los cambios realizados en la base de datos.
+    conexion.commit()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Agrega la cita a la lista de citas del sistema.
+    agregar_cita(fecha + " - " + hora)
+
+    # Muestra un mensaje indicando que el registro fue exitoso.
+    messagebox.showinfo(
+        "Registro exitoso",
+        "Cita registrada correctamente."
+    )
 
 # ===========================================
 # INTERFAZ GRÁFICA
