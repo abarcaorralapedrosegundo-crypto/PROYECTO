@@ -617,6 +617,129 @@ def registrar_cita(fecha, hora, estado, id_paciente, id_medico):
         "Cita registrada correctamente."
     )
 
+# Esta función obtiene todas las citas registradas.
+def consultar_citas():
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para obtener todas las citas.
+    cursor.execute("""
+        SELECT * FROM cita
+    """)
+
+    # Guarda todos los registros obtenidos.
+    citas = cursor.fetchall()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Devuelve la lista de citas.
+    return citas
+
+# Esta función registra un nuevo historial clínico.
+def registrar_historial(fecha, diagnostico, tratamiento, id_paciente):
+
+    # Verifica que todos los campos tengan información.
+    if fecha == "" or diagnostico == "" or tratamiento == "" or id_paciente == "":
+
+        # Muestra un mensaje indicando que existen campos vacíos.
+        messagebox.showwarning(
+            "Campos vacíos",
+            "Complete todos los datos del historial clínico."
+        )
+
+        # Finaliza la función.
+        return
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para registrar un historial clínico.
+    cursor.execute(
+        """
+        INSERT INTO historial_clinico(fecha, diagnostico, tratamiento, id_paciente)
+        VALUES(?, ?, ?, ?)
+        """,
+        (fecha, diagnostico, tratamiento, id_paciente)
+    )
+
+    # Guarda los cambios realizados en la base de datos.
+    conexion.commit()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Guarda el historial en la pila del sistema.
+    agregar_historial(diagnostico)
+
+    # Muestra un mensaje indicando que el registro fue exitoso.
+    messagebox.showinfo(
+        "Registro exitoso",
+        "Historial clínico registrado correctamente."
+    )
+
+# Esta función obtiene todos los historiales clínicos registrados.
+def consultar_historial():
+
+    # Establece la conexión con la base de datos.
+    conexion = conectar_bd()
+
+    # Crea un cursor para ejecutar instrucciones SQL.
+    cursor = conexion.cursor()
+
+    # Ejecuta la consulta para obtener todos los historiales.
+    cursor.execute("""
+        SELECT * FROM historial_clinico
+    """)
+
+    # Guarda todos los registros obtenidos.
+    historiales = cursor.fetchall()
+
+    # Cierra la conexión con la base de datos.
+    conexion.close()
+
+    # Devuelve la lista de historiales.
+    return historiales
+
+# Esta función busca un paciente utilizando su número de cédula.
+def buscar_paciente(cedula):
+
+    # Obtiene la lista de pacientes registrados.
+    pacientes = consultar_pacientes()
+
+    # Recorre todos los pacientes uno por uno.
+    for paciente in pacientes:
+
+        # Compara la cédula ingresada con la cédula almacenada.
+        if paciente[2] == cedula:
+
+            # Devuelve el paciente encontrado.
+            return paciente
+
+    # Si no encuentra el paciente devuelve None.
+    return None
+
+# Esta función limpia las cajas de texto de la ventana.
+def limpiar_campos():
+
+    # Borra el contenido de la caja del nombre.
+    entrada_nombre.delete(0, END)
+
+    # Borra el contenido de la caja de la cédula.
+    entrada_cedula.delete(0, END)
+
+    # Borra el contenido de la caja de la edad.
+    entrada_edad.delete(0, END)
+
+    # Borra el contenido de la caja del teléfono.
+    entrada_telefono.delete(0, END)
 # ===========================================
 # INTERFAZ GRÁFICA
 # ===========================================
