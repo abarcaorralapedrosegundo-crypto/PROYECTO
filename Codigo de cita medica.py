@@ -247,8 +247,6 @@ class HistorialClinico:
 # ===========================================
 # ESTRUCTURA DE DATOS
 # ===========================================
-# Crea una cola vacía
-cola_espera = deque()
 
 # Función para ingresar un paciente
 def ingresar_cola(nombre):
@@ -398,9 +396,9 @@ def crear_tablas():
 
             id_medico INTEGER NOT NULL,
 
-            FOREIGN KEY(id_paciente) REFERENCES paciente(id),
+            FOREIGN KEY(id_paciente) REFERENCES paciente(id_paciente),
 
-            FOREIGN KEY(id_medico) REFERENCES medico(id)
+            FOREIGN KEY(id_medico) REFERENCES medico(id_medico)
 
         )
 
@@ -420,7 +418,7 @@ def crear_tablas():
 
             id_paciente INTEGER NOT NULL,
 
-            FOREIGN KEY(id_paciente) REFERENCES paciente(id)
+            FOREIGN KEY(id_paciente) REFERENCES paciente(id_paciente)
 
         )
 
@@ -443,16 +441,16 @@ crear_tablas()
 # Esta función registra un nuevo paciente en la base de datos.
 def registrar_paciente(nombre, cedula, edad, telefono):
     # Verifica que todos los campos tengan información.
-if nombre == "" or cedula == "" or edad == "" or telefono == "":
+    if nombre == "" or cedula == "" or edad == "" or telefono == "":
 
-    # Muestra un mensaje de advertencia.
-    messagebox.showwarning(
-        "Campos vacíos",
-        "Complete todos los datos del paciente."
-    )
+        # Muestra un mensaje de advertencia.
+        messagebox.showwarning(
+            "Campos vacíos",
+            "Complete todos los datos del paciente."
+        )
 
-    # Finaliza la función sin guardar información.
-    return
+        # Finaliza la función sin guardar información.
+        return
     
     # Establece la conexión con la base de datos.
     conexion = conectar_bd()
@@ -726,20 +724,6 @@ def buscar_paciente(cedula):
     # Si no encuentra el paciente devuelve None.
     return None
 
-# Esta función limpia las cajas de texto de la ventana.
-def limpiar_campos():
-
-    # Borra el contenido de la caja del nombre.
-    entrada_nombre.delete(0, END)
-
-    # Borra el contenido de la caja de la cédula.
-    entrada_cedula.delete(0, END)
-
-    # Borra el contenido de la caja de la edad.
-    entrada_edad.delete(0, END)
-
-    # Borra el contenido de la caja del teléfono.
-    entrada_telefono.delete(0, END)
 # ===========================================
 # INTERFAZ GRÁFICA
 # ===========================================
@@ -878,6 +862,862 @@ def ventana_registrar_paciente():
 
     # Cambia el color de fondo.
     ventana_paciente.configure(bg="#EAF4FC")
+# Esta función muestra todos los pacientes registrados.
+def ventana_consultar_pacientes():
+
+    # Crea una nueva ventana.
+    ventana_consulta = Toplevel()
+
+    # Asigna un título.
+    ventana_consulta.title("Consultar Pacientes")
+
+    # Define el tamaño de la ventana.
+    ventana_consulta.geometry("750x400")
+
+    # Impide cambiar el tamaño.
+    ventana_consulta.resizable(False, False)
+
+    # Cambia el color del fondo.
+    ventana_consulta.configure(bg="#EAF4FC")
+
+    # Título de la ventana.
+    Label(
+        ventana_consulta,
+        text="Pacientes Registrados",
+        font=("Arial",15,"bold"),
+        bg="#EAF4FC",
+        fg="darkblue"
+    ).pack(pady=10)
+
+    # Crea una tabla utilizando Treeview.
+    tabla = ttk.Treeview(
+        ventana_consulta,
+        columns=("ID","Nombre","Cedula","Edad","Telefono"),
+        show="headings"
+    )
+
+    # Define los encabezados.
+    tabla.heading("ID", text="ID")
+    tabla.heading("Nombre", text="Nombre")
+    tabla.heading("Cedula", text="Cédula")
+    tabla.heading("Edad", text="Edad")
+    tabla.heading("Telefono", text="Teléfono")
+
+    # Define el ancho de cada columna.
+    tabla.column("ID", width=60)
+    tabla.column("Nombre", width=180)
+    tabla.column("Cedula", width=150)
+    tabla.column("Edad", width=70)
+    tabla.column("Telefono", width=140)
+
+    # Coloca la tabla.
+    tabla.pack(pady=15)
+
+    # Obtiene todos los pacientes registrados.
+    pacientes = consultar_pacientes()
+
+    # Recorre todos los registros.
+    for paciente in pacientes:
+
+        # Inserta cada paciente en la tabla.
+        tabla.insert("", END, values=paciente)
+
+    # Botón para cerrar la ventana.
+    Button(
+        ventana_consulta,
+        text="Cerrar",
+        width=15,
+        command=ventana_consulta.destroy
+    ).pack(pady=10)
+
+# Esta función abre la ventana para registrar un médico.
+def ventana_registrar_medico():
+
+    # Crea una nueva ventana.
+    ventana_medico = Toplevel()
+
+    # Coloca un título a la ventana.
+    ventana_medico.title("Registrar Médico")
+
+    # Define el tamaño de la ventana.
+    ventana_medico.geometry("450x420")
+
+    # Impide cambiar el tamaño.
+    ventana_medico.resizable(False, False)
+
+    # Cambia el color de fondo.
+    ventana_medico.configure(bg="#EAF4FC")
+
+    # Título principal.
+    Label(
+        ventana_medico,
+        text="Registro de Médico",
+        font=("Arial",16,"bold"),
+        bg="#EAF4FC",
+        fg="darkblue"
+    ).pack(pady=10)
+
+    # ------------------------------
+    # Nombre
+    # ------------------------------
+
+    Label(
+        ventana_medico,
+        text="Nombre:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_nombre = Entry(
+        ventana_medico,
+        width=35
+    )
+
+    entrada_nombre.pack()
+
+    # ------------------------------
+    # Cédula
+    # ------------------------------
+
+    Label(
+        ventana_medico,
+        text="Cédula:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_cedula = Entry(
+        ventana_medico,
+        width=35
+    )
+
+    entrada_cedula.pack()
+
+    # ------------------------------
+    # Especialidad
+    # ------------------------------
+
+    Label(
+        ventana_medico,
+        text="Especialidad:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_especialidad = Entry(
+        ventana_medico,
+        width=35
+    )
+
+    entrada_especialidad.pack()
+
+    # ------------------------------
+    # Teléfono
+    # ------------------------------
+
+    Label(
+        ventana_medico,
+        text="Teléfono:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_telefono = Entry(
+        ventana_medico,
+        width=35
+    )
+
+    entrada_telefono.pack()
+
+    # ------------------------------
+    # Consultorio
+    # ------------------------------
+
+    Label(
+        ventana_medico,
+        text="Consultorio:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_consultorio = Entry(
+        ventana_medico,
+        width=35
+    )
+
+    entrada_consultorio.pack()
+
+    # ------------------------------
+    # Botón Guardar
+    # ------------------------------
+
+    Button(
+
+        ventana_medico,
+
+        text="Guardar Médico",
+
+        bg="green",
+
+        fg="white",
+
+        width=20,
+
+        command=lambda:[
+
+            registrar_medico(
+
+                entrada_nombre.get(),
+
+                entrada_cedula.get(),
+
+                entrada_especialidad.get(),
+
+                entrada_telefono.get(),
+
+                entrada_consultorio.get()
+
+            ),
+
+            entrada_nombre.delete(0,END),
+
+            entrada_cedula.delete(0,END),
+
+            entrada_especialidad.delete(0,END),
+
+            entrada_telefono.delete(0,END),
+
+            entrada_consultorio.delete(0,END)
+
+        ]
+
+    ).pack(pady=15)
+
+# Esta función muestra todos los médicos registrados.
+def ventana_consultar_medicos():
+
+    # Crea una nueva ventana.
+    ventana_consulta = Toplevel()
+
+    # Coloca un título.
+    ventana_consulta.title("Consultar Médicos")
+
+    # Define el tamaño.
+    ventana_consulta.geometry("850x400")
+
+    # Impide cambiar el tamaño.
+    ventana_consulta.resizable(False, False)
+
+    # Color de fondo.
+    ventana_consulta.configure(bg="#EAF4FC")
+
+    # Título.
+    Label(
+
+        ventana_consulta,
+
+        text="Médicos Registrados",
+
+        font=("Arial",15,"bold"),
+
+        bg="#EAF4FC",
+
+        fg="darkblue"
+
+    ).pack(pady=10)
+
+    # Crea la tabla.
+    tabla = ttk.Treeview(
+
+        ventana_consulta,
+
+        columns=(
+
+            "ID",
+
+            "Nombre",
+
+            "Cedula",
+
+            "Especialidad",
+
+            "Telefono",
+
+            "Consultorio"
+
+        ),
+
+        show="headings"
+
+    )
+
+    # Encabezados.
+
+    tabla.heading("ID", text="ID")
+
+    tabla.heading("Nombre", text="Nombre")
+
+    tabla.heading("Cedula", text="Cédula")
+
+    tabla.heading("Especialidad", text="Especialidad")
+
+    tabla.heading("Telefono", text="Teléfono")
+
+    tabla.heading("Consultorio", text="Consultorio")
+
+    # Tamaño de columnas.
+
+    tabla.column("ID", width=60)
+
+    tabla.column("Nombre", width=170)
+
+    tabla.column("Cedula", width=120)
+
+    tabla.column("Especialidad", width=150)
+
+    tabla.column("Telefono", width=120)
+
+    tabla.column("Consultorio", width=120)
+
+    # Muestra la tabla.
+
+    tabla.pack(pady=15)
+
+    # Obtiene los médicos registrados.
+
+    medicos = consultar_medicos()
+
+    # Recorre todos los registros.
+
+    for medico in medicos:
+
+        # Inserta el registro en la tabla.
+
+        tabla.insert("", END, values=medico)
+
+    # Botón para cerrar la ventana.
+
+    Button(
+
+        ventana_consulta,
+
+        text="Cerrar",
+
+        width=15,
+
+        command=ventana_consulta.destroy
+
+    ).pack(pady=10)
+# Esta función abre la ventana para registrar una cita.
+def ventana_registrar_cita():
+
+    # Crea una nueva ventana.
+    ventana_cita = Toplevel()
+
+    # Coloca un título.
+    ventana_cita.title("Registrar Cita")
+
+    # Define el tamaño.
+    ventana_cita.geometry("450x420")
+
+    # Impide modificar el tamaño.
+    ventana_cita.resizable(False, False)
+
+    # Cambia el color de fondo.
+    ventana_cita.configure(bg="#EAF4FC")
+
+    # Título principal.
+    Label(
+        ventana_cita,
+        text="Registro de Cita Médica",
+        font=("Arial",16,"bold"),
+        bg="#EAF4FC",
+        fg="darkblue"
+    ).pack(pady=10)
+
+    # -----------------------------
+    # Fecha
+    # -----------------------------
+
+    Label(
+        ventana_cita,
+        text="Fecha:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_fecha = Entry(
+        ventana_cita,
+        width=35
+    )
+
+    entrada_fecha.pack()
+
+    # -----------------------------
+    # Hora
+    # -----------------------------
+
+    Label(
+        ventana_cita,
+        text="Hora:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_hora = Entry(
+        ventana_cita,
+        width=35
+    )
+
+    entrada_hora.pack()
+
+    # -----------------------------
+    # Estado
+    # -----------------------------
+
+    Label(
+        ventana_cita,
+        text="Estado:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_estado = Entry(
+        ventana_cita,
+        width=35
+    )
+
+    entrada_estado.pack()
+
+    # -----------------------------
+    # ID Paciente
+    # -----------------------------
+
+    Label(
+        ventana_cita,
+        text="ID Paciente:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_paciente = Entry(
+        ventana_cita,
+        width=35
+    )
+
+    entrada_paciente.pack()
+
+    # -----------------------------
+    # ID Médico
+    # -----------------------------
+
+    Label(
+        ventana_cita,
+        text="ID Médico:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_medico = Entry(
+        ventana_cita,
+        width=35
+    )
+
+    entrada_medico.pack()
+
+    # -----------------------------
+    # Botón Guardar
+    # -----------------------------
+
+    Button(
+
+        ventana_cita,
+
+        text="Guardar Cita",
+
+        width=20,
+
+        bg="green",
+
+        fg="white",
+
+        command=lambda:[
+
+            registrar_cita(
+
+                entrada_fecha.get(),
+
+                entrada_hora.get(),
+
+                entrada_estado.get(),
+
+                entrada_paciente.get(),
+
+                entrada_medico.get()
+
+            ),
+
+            entrada_fecha.delete(0,END),
+
+            entrada_hora.delete(0,END),
+
+            entrada_estado.delete(0,END),
+
+            entrada_paciente.delete(0,END),
+
+            entrada_medico.delete(0,END)
+
+        ]
+
+    ).pack(pady=15)
+
+# Esta función muestra todas las citas registradas.
+def ventana_consultar_citas():
+
+    # Crea una nueva ventana.
+    ventana_consulta = Toplevel()
+
+    # Coloca un título.
+    ventana_consulta.title("Consultar Citas")
+
+    # Define el tamaño.
+    ventana_consulta.geometry("850x400")
+
+    # Impide cambiar el tamaño.
+    ventana_consulta.resizable(False, False)
+
+    # Color del fondo.
+    ventana_consulta.configure(bg="#EAF4FC")
+
+    # Título.
+    Label(
+
+        ventana_consulta,
+
+        text="Citas Registradas",
+
+        font=("Arial",15,"bold"),
+
+        bg="#EAF4FC",
+
+        fg="darkblue"
+
+    ).pack(pady=10)
+
+    # Crea la tabla.
+    tabla = ttk.Treeview(
+
+        ventana_consulta,
+
+        columns=(
+
+            "ID",
+
+            "Fecha",
+
+            "Hora",
+
+            "Estado",
+
+            "Paciente",
+
+            "Medico"
+
+        ),
+
+        show="headings"
+
+    )
+
+    # Encabezados.
+
+    tabla.heading("ID", text="ID")
+
+    tabla.heading("Fecha", text="Fecha")
+
+    tabla.heading("Hora", text="Hora")
+
+    tabla.heading("Estado", text="Estado")
+
+    tabla.heading("Paciente", text="ID Paciente")
+
+    tabla.heading("Medico", text="ID Médico")
+
+    # Tamaño de columnas.
+
+    tabla.column("ID", width=60)
+
+    tabla.column("Fecha", width=120)
+
+    tabla.column("Hora", width=120)
+
+    tabla.column("Estado", width=120)
+
+    tabla.column("Paciente", width=120)
+
+    tabla.column("Medico", width=120)
+
+    # Muestra la tabla.
+    tabla.pack(pady=15)
+
+    # Obtiene las citas registradas.
+    citas = consultar_citas()
+
+    # Recorre todos los registros.
+    for cita in citas:
+
+        # Inserta cada registro en la tabla.
+        tabla.insert("", END, values=cita)
+
+    # Botón para cerrar.
+    Button(
+
+        ventana_consulta,
+
+        text="Cerrar",
+
+        width=15,
+
+        command=ventana_consulta.destroy
+
+    ).pack(pady=10)
+# Esta función abre la ventana para registrar un historial clínico.
+def ventana_registrar_historial():
+
+    # Crea una nueva ventana.
+    ventana_historial = Toplevel()
+
+    # Coloca un título.
+    ventana_historial.title("Registrar Historial Clínico")
+
+    # Define el tamaño.
+    ventana_historial.geometry("450x420")
+
+    # Impide modificar el tamaño.
+    ventana_historial.resizable(False, False)
+
+    # Cambia el color del fondo.
+    ventana_historial.configure(bg="#EAF4FC")
+
+    # Título principal.
+    Label(
+
+        ventana_historial,
+
+        text="Registro de Historial Clínico",
+
+        font=("Arial",16,"bold"),
+
+        bg="#EAF4FC",
+
+        fg="darkblue"
+
+    ).pack(pady=10)
+
+    # -----------------------------
+    # Fecha
+    # -----------------------------
+
+    Label(
+        ventana_historial,
+        text="Fecha:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_fecha = Entry(
+        ventana_historial,
+        width=35
+    )
+
+    entrada_fecha.pack()
+
+    # -----------------------------
+    # Diagnóstico
+    # -----------------------------
+
+    Label(
+        ventana_historial,
+        text="Diagnóstico:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_diagnostico = Entry(
+        ventana_historial,
+        width=35
+    )
+
+    entrada_diagnostico.pack()
+
+    # -----------------------------
+    # Tratamiento
+    # -----------------------------
+
+    Label(
+        ventana_historial,
+        text="Tratamiento:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_tratamiento = Entry(
+        ventana_historial,
+        width=35
+    )
+
+    entrada_tratamiento.pack()
+
+    # -----------------------------
+    # ID Paciente
+    # -----------------------------
+
+    Label(
+        ventana_historial,
+        text="ID Paciente:",
+        bg="#EAF4FC"
+    ).pack()
+
+    entrada_paciente = Entry(
+        ventana_historial,
+        width=35
+    )
+
+    entrada_paciente.pack()
+
+    # -----------------------------
+    # Botón Guardar
+    # -----------------------------
+
+    Button(
+
+        ventana_historial,
+
+        text="Guardar Historial",
+
+        width=20,
+
+        bg="green",
+
+        fg="white",
+
+        command=lambda:[
+
+            registrar_historial(
+
+                entrada_fecha.get(),
+
+                entrada_diagnostico.get(),
+
+                entrada_tratamiento.get(),
+
+                entrada_paciente.get()
+
+            ),
+
+            entrada_fecha.delete(0,END),
+
+            entrada_diagnostico.delete(0,END),
+
+            entrada_tratamiento.delete(0,END),
+
+            entrada_paciente.delete(0,END)
+
+        ]
+
+    ).pack(pady=15)
+
+# Esta función muestra todos los historiales registrados.
+def ventana_consultar_historial():
+
+    # Crea una nueva ventana.
+    ventana_consulta = Toplevel()
+
+    # Coloca un título.
+    ventana_consulta.title("Consultar Historial Clínico")
+
+    # Define el tamaño.
+    ventana_consulta.geometry("900x400")
+
+    # Impide modificar el tamaño.
+    ventana_consulta.resizable(False, False)
+
+    # Cambia el color del fondo.
+    ventana_consulta.configure(bg="#EAF4FC")
+
+    # Título.
+    Label(
+
+        ventana_consulta,
+
+        text="Historiales Clínicos Registrados",
+
+        font=("Arial",15,"bold"),
+
+        bg="#EAF4FC",
+
+        fg="darkblue"
+
+    ).pack(pady=10)
+
+    # Crea la tabla.
+    tabla = ttk.Treeview(
+
+        ventana_consulta,
+
+        columns=(
+
+            "ID",
+
+            "Fecha",
+
+            "Diagnostico",
+
+            "Tratamiento",
+
+            "Paciente"
+
+        ),
+
+        show="headings"
+
+    )
+
+    # Encabezados.
+
+    tabla.heading("ID", text="ID")
+
+    tabla.heading("Fecha", text="Fecha")
+
+    tabla.heading("Diagnostico", text="Diagnóstico")
+
+    tabla.heading("Tratamiento", text="Tratamiento")
+
+    tabla.heading("Paciente", text="ID Paciente")
+
+    # Tamaño de columnas.
+
+    tabla.column("ID", width=60)
+
+    tabla.column("Fecha", width=120)
+
+    tabla.column("Diagnostico", width=250)
+
+    tabla.column("Tratamiento", width=250)
+
+    tabla.column("Paciente", width=120)
+
+    # Muestra la tabla.
+    tabla.pack(pady=15)
+
+    # Obtiene los historiales registrados.
+    historiales = consultar_historial()
+
+    # Recorre todos los registros.
+    for historial in historiales:
+
+        # Inserta cada historial en la tabla.
+        tabla.insert("", END, values=historial)
+
+    # Botón para cerrar la ventana.
+    Button(
+
+        ventana_consulta,
+
+        text="Cerrar",
+
+        width=15,
+
+        command=ventana_consulta.destroy
+
+    ).pack(pady=10)
 
 # Etiqueta del nombre.
 Label(
@@ -1017,20 +1857,28 @@ Button(
 
     fg="white",
 
-    command=lambda: registrar_paciente(
+    command=lambda:[
+        registrar_paciente(
 
-        entrada_nombre.get(),
+            entrada_nombre.get(),
 
-        entrada_cedula.get(),
+            entrada_cedula.get(),
 
-        entrada_edad.get(),
+            entrada_edad.get(),
 
-        entrada_telefono.get()
+            entrada_telefono.get()
 
-    )
+        ),
 
+        entrada_nombre.delete(0,END),
+
+        entrada_cedula.delete(0,END),
+
+        entrada_edad.delete(0,END),
+
+        entrada_telefono.delete(0,END)
+    ]
 ).pack(pady=15)
-
 # Crea un Frame para organizar los botones.
 frame_botones = Frame(
 
@@ -1088,3 +1936,10 @@ Button(
     command=ventana_paciente.destroy
 
 ).grid(row=0, column=1, padx=10)
+# ==========================================================
+# INICIO DEL PROGRAMA
+# ==========================================================
+
+# Ejecuta el ciclo principal de la interfaz gráfica.
+# El programa permanecerá abierto hasta que el usuario cierre la ventana.
+ventana.mainloop()
