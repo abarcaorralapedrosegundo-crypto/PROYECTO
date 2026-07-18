@@ -244,39 +244,146 @@ cola_espera.append("Pedro Vera")  # Agrega un paciente al final de la cola
 cola_espera.append("María López")  #Agrega otro paciente al final de la cola
 cola_espera.append("Carlos Pizarro")  # Agrega un tercer paciente al final de la cola
 
-# Extrae y muestra el primer paciente de la cola
-print("Siguiente paciente:", cola_espera.popleft())
+# Función para atender al siguiente paciente de la cola
+def atender_paciente():
+
+    if len(cola_espera) > 0:
+        return cola_espera.popleft()
+
+    return "No hay pacientes en espera."
+
+print("\n")
+print("=" * 60)
+print("        COLA (SALA DE ESPERA)")
+print("=" * 60)
+
+print("Pacientes en espera:")
+print(list(cola_espera))
+
+print("\nSe atiende al primer paciente:")
+
+print(atender_paciente())
+
+print("\nCola después de atender:")
+
+print(list(cola_espera))
 
 pila_historial = []
 
-pila_historial.append("Diagnóstico 1")
-pila_historial.append("Diagnóstico 2")
-pila_historial.append("Diagnóstico 3")
+pila_historial.append("Gripe")
+pila_historial.append("Migraña")
+pila_historial.append("Alergia")
 
-print(pila_historial.pop())
+# Devuelve el último historial registrado.
+def ultima_atencion():
+
+    # Verifica si la pila tiene elementos.
+    if len(pila_historial) > 0:
+
+        # Devuelve el último elemento.
+        return pila_historial[-1]
+
+    # Si la pila está vacía.
+    return "No existen historiales."
+
+# Elimina el último historial registrado.
+def eliminar_ultima_atencion():
+
+    # Verifica si existen historiales.
+    if len(pila_historial) > 0:
+
+        # Elimina el último elemento.
+        pila_historial.pop()
+
+        return "Última atención eliminada."
+
+    # Si la pila está vacía.
+    return "No existen historiales."
+
+print("\n")
+print("=" * 60)
+print("        PILA (HISTORIAL CLÍNICO)")
+print("=" * 60)
+
+print("Historial almacenado:")
+
+print(pila_historial)
+
+print("\nÚltima atención registrada:")
+
+print(ultima_atencion())
+
+print("\nSe elimina la última atención")
+
+eliminar_ultima_atencion()
+
+print("\nHistorial actualizado")
+
+print(pila_historial)
 
 lista_citas = []
 
-lista_citas.append("Cita 1")
-lista_citas.append("Cita 2")
-lista_citas.append("Cita 3")
+lista_citas.append("20/07/2026 08:00")
+lista_citas.append("21/07/2026 09:00")
+lista_citas.append("22/07/2026 10:30")
+
+print("\n")
+print("=" * 60)
+print("        LISTA DE CITAS")
+print("=" * 60)
+
+print("Citas registradas:")
+
+print(lista_citas)
+
+print("\nRecorrido de la lista:")
 
 for cita in lista_citas:
     print(cita)
 
+print("\n")
+print("=" * 60)
+print("        BÚSQUEDA SECUENCIAL")
+print("=" * 60)
+
+# Lista de pacientes
 pacientes = [
     "Pedro",
     "Maria",
     "Carlos"
 ]
 
-buscar = "Carlos"
+# Muestra la lista completa
+print("Lista de pacientes registrados:")
 
 for paciente in pacientes:
+    print("-", paciente)
 
+# Paciente que se desea buscar
+buscar = "Carlos"
+
+print("\nPaciente a buscar:", buscar)
+
+# Variable para verificar si fue encontrado
+encontrado = False
+
+# Recorre la lista uno por uno
+for paciente in pacientes:
+
+    # Compara el nombre buscado
     if paciente == buscar:
 
-        print("Paciente encontrado")
+        print("\nPaciente encontrado correctamente.")
+        print("Nombre:", paciente)
+
+        encontrado = True
+
+        break
+
+# Si no existe en la lista
+if encontrado == False:
+
+    print("\nPaciente no encontrado.")
 # ===========================================
 # BASE DE DATOS
 # ===========================================
